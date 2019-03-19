@@ -1,0 +1,148 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<title>Aya Entire Dimension Club</title>
+<link href="css/base.css" type="text/css" rel="stylesheet">
+<link href="css/login.css" type="text/css" rel="stylesheet">
+<link href="../static/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+<link href="../static/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+	<div class="login_all" style="display: block;">
+		<div id="login_wrap">
+			<div id="login_l" class="rel">
+				<!-- <h1 id="login_logo" title=""></h1> -->
+			</div>
+			<div id="login_r">
+				<b class="bt">登录</b>
+				<form id="subf" action="../login/adminLogin.shtml" method="post">
+					<input type="hidden" name="apassword">
+					<p>
+						<input type="text" id="tele" name="aname" placeholder="用户名"
+							value="">
+					</p>
+				</form>
+					<p>
+						<input type="password" id="tele" name="psd" placeholder="密码"
+							value="">
+					</p>
+					<input type="submit" class="btns block" id="login_submit" value="登 录">
+			</div>
+			<!--  <div class="weizc">还没有一个账号吗？<a href="">点击注册</a></div> -->
+		</div>
+	</div>
+<script src="../static/common/jquery-1.11.0.js"></script>
+<script src="../static/common/jquery.form.js"></script>
+<script type="text/javascript" src="../static/sjs/security.js"></script>
+<script type="text/javascript" src="../static/assets/js/bui.js"></script>
+<script type="text/javascript" src="../static/assets/js/config.js"></script>
+<script type="text/javascript">
+	var Mask = BUI.Mask;
+	var loadMask  = new Mask.LoadMask({
+	    el : '#login_r',
+	    msg : '正在登录...'
+	});
+	var fullMask  = new Mask.LoadMask({
+	    el : 'body',
+	    msg : '正在加载...'
+	});
+	fullMask.show();
+	window.onload=function(){
+		checkLogin();
+	}
+	function checkLogin() {
+		$.ajax({
+			url : "../login/checkLogin.shtml",
+			data : {},
+			dataType : "json",
+			type : "post",
+			async: true,
+			success : function(data) {
+				if (data.errType == "logined") {
+					window.top.location.href=data.errInfo;
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+			}
+		});
+	}
+	
+	$(document).ready(function(){
+		$("#login_submit").click(function() {
+			loadMask.show();
+			//alert($("[name='password']").val());
+			$.ajax({
+				url : "../login/creatKey.shtml",
+				data : {},
+				dataType : "json",
+				type : "post",
+				async: true,
+				success : function(data) {
+					if (data.errType == "true") {
+						var publicKey = RSAUtils.getKeyPair(data.Exponent, '', data.Modulus);
+				  		//颠倒密码的顺序，要不然后解密后会发现密码顺序是反的
+						var reversedPwd = $("[name='psd']").val().split("").reverse().join("");
+						//对密码进行加密传输 
+						$("[name='apassword']").val(RSAUtils.encryptedString(publicKey, reversedPwd));
+						$("#subf").submit();
+					}else {
+						loadMask.hide();
+					}
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,'warning');
+					loadMask.hide();
+				}
+			}); 
+		});
+		
+		$("#subf").ajaxForm({
+	         //定义返回JSON数据，还包括xml和script格式
+	         dataType:'json',
+	         beforeSend: function() {
+	         	//表单提交前做表单验证
+				return check();
+	         },
+	        success: function(data) {
+	         	if (data.errType=="true") {
+					window.top.location.href=data.errInfo;
+					return false;
+				} else {
+		        	loadMask.hide();
+					BUI.Message.Alert(data.error,'info');
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,'warning');
+				loadMask.hide();
+			}
+		});
+		fullMask.hide();
+    });
+	
+	
+	function check(){/* 
+		var aname=$("[name='aname']").val();
+		if (aname=="") {
+			BUI.Message.Alert('请输入用户名','info');
+        	loadMask.hide();
+			return false;
+		}
+		var psd=$("[name='psd']").val();
+		if (aname=="") {
+			BUI.Message.Alert('请输入密码','info');
+        	loadMask.hide();
+			return false;
+		} */
+		return true;
+	}
+	
+	
+</script>
+</body>
+</html>

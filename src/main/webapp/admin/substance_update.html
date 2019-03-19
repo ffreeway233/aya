@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../admin/css/base.css" type="text/css" rel="stylesheet" />
+<link href="../admin/css/tab.css" type="text/css" rel="stylesheet" />
+<link href="../admin/css/item.css" type="text/css" rel="stylesheet" />
+<link href="../admin/css/item_do.css" type="text/css" rel="stylesheet" />
+<link href="../static/assets3/css/bs3/dpl-min.css" rel="stylesheet" type="text/css" />
+<link href="../static/assets3/css/bs3/bui-min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../admin/css/uploadify.css"/>
+<link rel="stylesheet" href="../static/kindeditor2/themes/default/default.css" />
+<link rel="stylesheet" href="../static/kindeditor2/plugins/code/prettify.css" />
+<script charset="utf-8" src="../static/kindeditor2/kindeditor-all.js"></script>
+<script charset="utf-8" src="../static/kindeditor2/lang/zh-CN.js"></script>
+<script charset="utf-8" src="../static/kindeditor2/plugins/code/prettify.js"></script>
+<style>
+[v-cloak] {
+    display: none;
+}
+#edit {
+	margin-top: 30px;
+	margin-left: 200px;
+}
+#edit_1 {
+	margin: 0 auto;
+}
+.loading{ width:100%; height:100%;position:fixed; left:0; top:0; background:url(../static/images/loading2.gif) no-repeat 0 center #fff; background-size:auto;background-position: center; opacity:0.4; display:none; z-index: 9999; }
+</style>
+</head>
+<body>
+<div class="loading" style="display: none;"></div>
+	<form action="../substance/updSubstance.shtml" id="regForm" method="post">
+		<div style="padding:20px 0 0 20px;" class="productliist">
+			<div id="">
+				<div id="i_do_wrap" v-cloak>
+				<input type="hidden" name="sid" :value="substance.sid" id="sid"/>
+					<div class="i_do_div rel" id="i_no_sku_stock_wrap">
+						<p class="i_do_tle r_txt abs font14">名称</p>
+						<input type="text" id="i_no_sku_stock" name="sname"
+							class="block input left tline" placeholder="名称" :value="substance.sname"/>
+					</div>
+					
+					<div class="i_do_div rel" id="i_no_sku_stock_wrap">
+						<p class="i_do_tle r_txt abs font14">大类</p>
+						<div id="s1">
+						  <input type="hidden" id="tid"  name="tid" :value="substance.sname"/>
+						</div>
+					</div>
+					<input type="text" id="input11" name="spath" style="display: none;"  :value="substance.spath"/>
+					<div id="pic11" class="i_do_div rel" id="i_no_sku_stock_wrap"  />
+					<img :src="substance.spath" width="110px" height="110px"/>
+					</div>
+					<div class="i_do_div rel" id="i_no_sku_stock_wrap"  >
+						<p class="i_do_tle r_txt abs font14">图片</p>
+						<img name="uploadify" id="uploadify" type="file" />
+					</div>
+					<div class="i_do_div rel" id="i_no_sku_stock_wrap">
+						<p class="i_do_tle r_txt abs font14">详情</p>
+						<textarea name="scontent" cols="8" rows="8" style="visibility:hidden;"></textarea>
+					</div>
+					<div id="i_do_btns" style="height:50px;">
+						<div style="width:800px; margin:0 auto">
+							<input type="button" class="btns block margin_auto"
+								style="float:left; margin-right:20px;" value="提 交" id="tj"/>
+						<a href="javascript:void(0);" onclick="close1();" class="btns block margin_auto" style="float:left;">关 闭</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+<script type="text/javascript" language="javascript" src="../static/common/jquery.min-2.1.3.js"></script>
+<script src="../admin/js/jquery.uploadify.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="../static/assets/js/bui-min.js"></script>
+<script type="text/javascript" src="../static/assets/js/config-min.js"></script>
+<script type="text/javascript" language="javascript" src="../static/common/jquery.form.js"></script>
+<script type="text/javascript" language="javascript" src="../static/common/getQueryString.js"></script>
+<script type="text/javascript" src="../static/vue/vue.min.js"></script>
+<script type="text/javascript">
+var vm=new Vue({
+	el:'#i_do_wrap',
+	data:{
+		 substance:"",
+	}
+	});
+var Mask = BUI.Mask;
+var sid=getQueryString("sid");
+var fullMask = new Mask.LoadMask({
+    el : 'body',
+    msg : '正在处理。。。'
+});
+var loadMask = new Mask.LoadMask({
+    el : 'body',
+    msg : 'loading。。。'
+});
+function close1() {  
+	//关闭当前页
+    top.topManager.closePage();
+}
+	var editor1=null;
+	KindEditor.ready(function(K) {
+		 editor1 = K.create('textarea[name="scontent"]', {
+			filterMode : true,
+			width:"800px",
+			height:"370px",
+			cssPath : '../static/kindeditor2/plugins/code/prettify.css',
+			uploadJson : '../Upload_json.html',
+			fileManagerJson : '../File_manager_json.html',
+			allowFileManager : true,
+			afterCreate : function() {
+			}
+		});
+		prettyPrint();
+	});
+	
+	$(document).ready(function(){
+		$.ajax({
+			url : "../substance/findSubstance.shtml",
+			data : {"sid":sid},
+			dataType : "json",
+			type : "post",
+			async: true,
+			success : function(data) {
+				loadMask.hide();
+				if (!data.hasError) {
+					//alert(JSON.stringify(data))
+					editor1.html(data.object.scontent);
+					vm.substance=data.object;
+					 BUI.use('bui/select',function(Select){
+						    var items = [
+						          {text:'动画',value:'1'},
+						          {text:'漫画',value:'2'},
+						          {text:'游戏',value:'3'},
+						          {text:'cosplay',value:'4'},
+						        ],
+						        select = new Select.Select({  
+						          render:'#s1',
+						          valueField:'#tid',
+						          items:items
+						        });
+						    select.render();
+						    select.on('change', function(ev){
+						     // alert(ev.item);
+						    });
+						  });
+					   
+		$("#uploadify").uploadify({
+			'uploader': '../UploadFile.shtml', 		//后台处理程序的相对路径
+			'swf': '../admin/swf/uploadify.swf',  	//flash文件的相对路径
+			'height': 25,
+			'whith' :100,
+			'fileObjName':'file', 							//设置上传文件名称
+			'queueSizeLimit':1, 							//当允许多文件生成时，设置选择文件的个数，默认值：999
+			'fileTypeDesc' : '*.jpg;*.gif;*.png;*.jpeg', 	//用来设置选择文件对话框中的提示文本        
+			'fileTypeExts' : '*.jpg;*.gif;*.png;*.jpeg', //设置可以选择的文件的类型
+			'auto' : true, 									//设置为true当选择文件后就直接上传了，为false需要点击上传按钮才上传
+			'multi' : false, 								//设置为true时可以上传多个文件
+			'uploadLimit' : 999,							//可上传次数，默认值：999
+			'fileSizeLimit':'2048000000KB',					//上传文件的大小限制
+			'buttonText': '上传图片',							//浏览按钮的文本
+			'progressData' : 'speed',						// ‘percentage’ or ‘speed’.
+			'method':'post',
+			'debug':false,
+			'onUploadProgress' : function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal) {
+			},
+			'onUploadSuccess' : function(file, data, response) {
+	        	$("#pic11").html("<img src=\"../uploadstart/"+data.trim()+"\" width=\"110\" height=\"110\"/>");
+	        	$("#input11").val("../uploadstart/"+data.trim());
+
+	        	$("#pic11").removeAttr("style");
+			},
+	        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+	            alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+	        }
+	    });
+				}else {
+					BUI.Message.Alert(data.error,'warning');
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				loadMask.hide();
+				BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,'warning');
+			}
+		});
+	
+		$("#tj").click(function() {
+			editor1.sync();
+			$("#regForm").submit();
+		});
+	    $("#regForm").ajaxForm({
+	         //定义返回JSON数据，还包括xml和script格式
+	         dataType:'json',
+	       
+	        success: function(data) {
+	        	if (data.hasError==false) {
+	         		BUI.Message.Alert(data.error,function(){
+		         		//刷新其他页面时，如果页面未打开，不进行任何操作
+		         		 top.topManager.reloadPage('substance-menu');
+		         	     top.topManager.closePage();
+	         		},'info');
+					//window.location.href=document.referrer;
+				} else {
+					BUI.Message.Alert(data.error,'warning');
+				}
+	         	fullMask.hide();
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+	         	fullMask.hide();
+				BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,'warning');
+			}
+		});
+		
+	});
+	
+</script>
+</body>
+</html>

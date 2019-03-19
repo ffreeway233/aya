@@ -1,0 +1,79 @@
+.login_all{ width:100%; height:100%; position:fixed; left:0; top:0; background:url(../images/admin_bj.jpg) no-repeat; background-size:100% 100%; overflow:hidden;}
+#login_wrap {
+	width:400px;
+	margin:0 auto;
+	margin-top:4%;
+	color:#333;
+}
+#login_l {
+	width:100%;
+	height:96px;
+}
+#login_logo {
+	width:138px;
+	height:96px;
+	background:url(../images/login_logo.png) no-repeat center center;
+	margin:0 auto;
+}
+
+#login_r {
+      width: 400px;
+    height: 340px;
+    filter: Alpha(Opacity=75);
+    background: url(../images/666.gif) no-repeat;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    /* background-color: rgba(255, 255, 255, 0.75); */
+    margin-top: 30px;
+    border: 1px solid #dfccbc;
+    border-radius: 5px;}
+#login_r .bt{ text-align:center; font-size:18px; display:block; line-height:30px; margin-top:36px;font-family:"Microsoft YaHei"}
+#login_r input[type='text'],#login_r input[type='password']{ width:326px; height:38px; border:1px solid #b2bfc7; background:#fff; border-radius:3px; display:block; margin:0 auto; margin-top:10px;font-family:"Microsoft YaHei";}
+#login_r input[type='text']{ margin-top:30px;}
+#login_r input[type='submit']{ margin:20px auto 0 auto; font-size:14px;font-family:"Microsoft YaHei"}
+
+.pass_fg{ width:328px; margin:18px auto 0 auto; overflow:hidden; font-size:12px; line-height:20px;}
+.pass_fg span{ float:left; display:block; overflow:hidden;}
+.pass_fg a{ float:right; text-decoration:underline; margin-right:12px;}
+.pass_fg input[type='checkbox']{ margin:4px 8px 0 0; float:left;}
+#login_r input[type='submit']{ width:100px;}
+
+.weizc{ width:100%; text-align:center; font-size:14px; line-height:30px; color:#fff; margin-top:20px;}
+.weizc a{ color:#fff; text-decoration:underline;}
+
+#country {
+	padding-left: 10px;
+	margin: 10px 0 15px
+}
+#pwd, #tele {
+	width: 100%;
+	text-indent: 10px
+}
+#pwd {
+	margin-top: 10px
+}
+#login_submit {
+	margin: 20px 0 30px
+}
+#regi_wd {
+	color: #404089;
+	padding-left: 12px;
+	font-size: 14px
+}
+#regi_wd_icon {
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 6px 0 6px 6px;
+	border-color: transparent transparent transparent #404089;
+	top: 5px;
+	left: 0
+}
+#fast_ul {
+	line-height: 24px;
+	padding: 10px 0
+}
+.fast_li {
+	margin-right: 15px
+}

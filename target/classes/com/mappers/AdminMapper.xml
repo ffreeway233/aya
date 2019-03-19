@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.AdminDao">
+	<select id="login" parameterType="Admin" resultType="Admin">
+		select *
+		from admin where aname=#{aname} and apassword = #{apassword}
+	</select>
+	<update id="update">
+		update admin
+		<set>
+			<if test="aname != null and aname !=''">aname = #{aname},</if>
+			<if test="apassword != null and apassword !=''">apassword = #{apassword},</if>
+			<if test="ip != null and ip !=''">ip = #{ip},</if>
+			<if test="atoken != null and atoken !=''">atoken = #{atoken},</if>
+			<if test="alogintime != null and alogintime !=''">alogintime = #{alogintime},</if>
+		</set>
+		where aid=#{aid}
+	</update>
+	<select id="findById" parameterType="int" resultType="Admin">
+		select *
+		from admin where aid=#{aid}
+	</select>
+	<select id="queryRowsByMap" parameterType="map" resultType="Admin">
+		select * from admin limit #{start},#{limit}
+	</select>
+	<select id="queryNumberByMap" parameterType="map" resultType="Long">
+		select count(*) from admin
+	</select>
+	<select id="qureyAdminByAname" parameterType="String"
+		resultType="Integer">
+		select count(*) from admin where aname=#{aname}
+	</select>
+	<insert id="save" parameterType="Admin">
+		insert into admin
+		(aname,apassword) values(#{aname},#{apassword})
+	</insert>
+	<delete id="del" parameterType="Integer">
+		delete from admin where
+		aid=#{aid}
+	</delete>
+</mapper>

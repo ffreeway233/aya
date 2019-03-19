@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Aya Entire Dimension Club</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- <link href="../static/assets3/css/bs3/dpl-min.css" rel="stylesheet" type="text/css" />
+<link href="../static/assets3/css/bs3/bui-min.css" rel="stylesheet" type="text/css" /> -->
+<link href="../static/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+<link href="../static/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+   <link href="../static/assets/css/main.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+[v-cloak] {
+    display: none;
+}
+</style>
+ </head>
+ <body>
+   <div class="header" id="wel">
+    <div class="dl-title"><span class="">Aya Entire Dimension Club</span></div>
+    <div v-if="greeting" v-cloak class="dl-log">欢迎您：<span class="dl-log-user">{{ user }}</span>
+    	<a href="javascript:void(0);" onclick="upd()" title="修改密码" class="dl-log-quit btn-edit">[修改密码]</a>
+        <a href="javascript:void(0);" onclick="loginOut()" title="退出系统" class="dl-log-quit">[退出]</a>
+    </div>
+   </div>
+   <div class="content">
+    <div class="dl-main-nav"  style="display:none">
+      <ul id="J_Nav"  class="nav-list ks-clear">
+        <li class="nav-item dl-selected"></li>
+      </ul>
+    </div>
+    <ul id="J_NavContent" class="dl-tab-conten">
+    </ul>
+   </div>
+   
+   <div id="content" class="hide">
+     <form id="psd" class="form-horizontal" action="../admin/updPsd.shtml" method="post">
+       <div class="row">
+         <div class="control-group span8">
+           <label class="control-label"><s>*</s>旧密码</label>
+           <div class="controls">
+             <input name="oldpassword" type="password" data-rules="{required:true}" class="input-normal control-text">
+           </div>
+         </div>
+       </div>
+       <div class="row">
+         <div class="control-group span8">
+           <label class="control-label"><s>*</s>新密码</label>
+           <div class="controls">
+             <input id="p1" name="newpassword" type="password" data-rules="{required:true}" class="input-normal control-text">
+           </div>
+         </div>
+       </div>
+       <div class="row">
+         <div class="control-group span15">
+            <label class="control-label"><s>*</s>确认密码</label>
+            <div class="controls">
+             <input name="repassword" type="password" data-rules="{required:true,equalTo:'#p1'}" class="input-normal control-text">
+            </div>
+          </div>
+       </div>
+     </form>
+   </div>
+<script type="text/javascript" src="../static/common/jquery.min-2.1.3.js"></script>
+<script type="text/javascript" src="../static/common/jquery.form.js"></script>
+<script type="text/javascript" src="../static/assets/js/bui-min.js"></script>
+<script type="text/javascript" src="../static/assets/js/config-min.js"></script>
+<script type="text/javascript" src="../static/vue2/vue.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$.ajax({
+		url : "../login/getLoginInfo.shtml",
+		dataType : "json",
+		type : "post",
+		async: true,
+		success : function(data) {
+			if (data.hasError == false) {
+				//alert(JSON.stringify(data));
+				// 这是我们的 Model
+				var exampleData = {
+				  greeting: true,//是否插入值，默认为true
+				  user: data.object.aname
+				};
+				// 创建一个 Vue 实例或 "ViewModel"
+				// 它连接 View 与 Model
+				var exampleVM = new Vue({
+					el: '#wel',
+					data: exampleData
+				});
+				BUI.use('common/main',function(){
+			    	  			        var config = [{
+			          id:'menu',
+			          homePage:'main-menu', //默认打开的主页
+			          menu:[{
+				              text:'首页',
+				              items:[
+				                {id:'main-menu',text:'欢迎',href:'right.html',closeable : true},
+				              ]
+			            },
+			            {
+			                text:'♂',
+			                items:[
+			                  {id:'substance-menu',text:'动画',href:'substance.html?tid=1'},
+			                  {id:'substance-menu',text:'漫画',href:'substance.html?tid=2'},
+			                  {id:'substance-menu',text:'游戏',href:'substance.html?tid=3'},
+			                  {id:'substance-menu',text:'cosplay',href:'substance.html?tid=4'},
+			                ],
+			                collapsed:true
+			            },
+			           /*   {
+			                text:'类别标签',
+			                items:[
+			                  {id:'category-menu',text:'标签',href:'category.html'},
+			                ],
+			                collapsed:true
+			            }, */
+			            {
+			                text:'管理员',
+			                items:[
+			                  {id:'admin-menu',text:'管理列表',href:'admin.html'}
+			                ],
+			                collapsed:true
+			              }]
+			          }];
+			      new PageUtil.MainPage({
+			        modulesConfig : config
+			      }); 
+ 			      
+			    });
+			}else {
+				BUI.Message.Alert(data.error,function(){
+					top.location.href="../admin/login.html";
+				},'warning');
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,function(){},'warning');
+		}
+	});
+	
+});
+	var Overlay = BUI.Overlay,
+    Form = BUI.Form;
+	var Mask = BUI.Mask;
+	var fullMask  = new Mask.LoadMask({
+	    el : 'body',
+	    msg : '正在加载...'
+	});
+	 //添加 名字为 sid的校验规则
+    Form.Rules.add({
+      name : 'rep',  //规则名称
+      msg : '两次输入不一致',//默认显示的错误信息
+      validator : function(value,baseValue,formatMsg){ //验证函数，验证值、基准值、格式化后的错误信息
+		if (value&&value!=$("[name='newpassword']").val()) {
+    	  return formatMsg;
+		}
+      }
+    });
+    var form = new Form.Form({
+      srcNode : '#psd'
+    }).render();
+	var dialog = new Overlay.Dialog({
+	    title:'修改密码',
+	    width:350,
+	    //配置DOM容器的编号
+	    contentId:'content',
+	    success:function () {
+			$("#psd").submit();        	
+	    }
+	});
+     function upd() {
+    	 $("[name='oldpassword']").val("");
+    	 $("[name='newpassword']").val("");
+    	 $("[name='repassword']").val("");
+    	 dialog.show();
+	}
+
+    $("#psd").ajaxForm({
+         //定义返回JSON数据，还包括xml和script格式
+         dataType:'json',
+         beforeSend: function() {
+         	//表单提交前做表单验证
+			//return check();
+         	fullMask.show();
+         },
+        success: function(data) {
+        	fullMask.hide();
+			if (data.hasError == false) {
+				BUI.Message.Alert(data.error,function(){
+					dialog.close();
+				},'info');
+			}else {
+				BUI.Message.Alert(data.error,'warning');
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,'warning');
+			fullMask.hide();
+		}
+	});
+    
+    function loginOut() {
+        BUI.Message.Confirm('您确定要退出后台吗？',function(){
+	        top.location.href="../login/loginOut.shtml";
+        },'question');
+    }
+  </script>
+ </body>
+</html>

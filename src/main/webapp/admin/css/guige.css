@@ -1,0 +1,163 @@
+@CHARSET "UTF-8";
+
+a {
+	text-decoration:none;
+	cursor: pointer;
+	background: #F5F5F5;
+}
+
+a:hover {
+	text-decoration:none;
+	border-color: #BBB5B5;
+}
+
+* {
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+.sku_btns a {
+	text-decoration:none;
+	background: #1EACEA;
+	color: #FFFFFF;
+	padding: 5px 10px;
+}
+
+input {
+	outline: none;
+}
+
+span {
+	display: inline-block;
+}
+
+.clearfix:after {
+	content: "";
+	display: block;
+	height: 0;
+	clear: both;
+}
+/****商品规格***/
+.sku_guige {
+	margin-top: 20px;
+	display: none;
+}
+
+.sku_modellist_title {
+	font-size: 14px;
+	margin-top: 20px;
+}
+/**********表格sku************/
+.sku_table {
+	margin-top: 15px;
+	border: 1px solid #dfdfdf;
+	text-align: center;
+	min-height: 320px;
+	display: none;
+}
+
+.sku_table input {
+	width: 100px;
+}
+
+.sku_tableHead {
+	background: #F5F5F5;
+	height: 40px;
+	border-bottom: 1px solid #dfdfdf;
+}
+
+.sku_t_title {
+	float: left;
+	width: 120px;
+	padding: 5px 0;
+	margin-top: 7px;
+	border-right: 1px solid #dfdfdf;
+}
+
+.sku_cell {
+	border-bottom: 1px solid #DFDFDF;
+}
+/*****弹窗中间部分内容*****/
+.sku_content {
+	padding: 25px 20px;
+	display: none;
+}
+
+.sku_add {
+	margin-top: 20px;
+	height: 36px;
+	font-size: 14px;
+}
+
+.sku_list {
+	font-size: 0;
+	margin-top: 15px;
+}
+
+.sku_item {
+	margin-top: 20px;
+}
+
+.sku_list a {
+	padding: 7px 20px;
+	border: 1px solid #d7d7d7;
+	border-radius: 5px;
+}
+
+.sku_list span {
+	position: relative;
+	font-size: 16px;
+	margin-right: 20px;
+}
+
+.sku_list .itemactive {
+	background: #2AC845;
+	color: #fff;
+}
+
+.sku_list .sku_item_close {
+	display: none;
+	position: absolute;
+	right: -10px;
+	top: -15px;
+	height: 20px;
+	width: 20px;
+	background: rgba(0, 0, 0, .5);
+	color: #FFF;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 20px;
+	font-style: normal;
+	cursor: pointer;
+}
+
+.sku_add input {
+	height: 34px;
+	padding: 5px;
+	width: 210px;
+	border: 1px solid #dfdfdf;
+	float: left;
+	border-right: none;
+}
+
+.sku_add a {
+	background: #F5F5F5;
+	height: 34px;
+	text-align: center;
+	display: inline-block;
+	min-width: 80px;
+	padding-top: 10px;
+	border: 1px solid #DFDFDF;
+}
+
+.layui-layer-btn .layui-layer-btn1 {
+	background: #f1f1f1;
+	border-color: #DEDEDE;
+	color: #000;
+}
+
+.layui-layer-btn .layui-layer-btn0 {
+	background: #4898d5;
+	border-color: #4898d5;
+	color: #fff;
+}

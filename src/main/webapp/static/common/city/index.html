@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>基于jQuery+JSON的省市联动效果</title>
+
+<style type="text/css">
+/* demo */
+.demo{width:80%;margin:20px auto}
+.demo h3{height:32px;line-height:32px}
+.demo p{line-height:24px}
+pre{margin-top:10px;padding:6px;background:#f7f7f7}
+</style>
+</head>
+
+<body>
+
+  
+	<div class="demo">
+		<h3>设置省份、城市、地区（县）的默认值</h3>
+		
+		<p>二级联动</p>
+		<div id="city_3">
+			<select class="prov"></select> 
+			<select class="city" disabled="disabled"></select>
+			<!-- <select class="dist" disabled="disabled"></select> -->
+		</div>
+	
+		<p>三级联动</p>
+		<input name="p" value="浙江省"/>
+		<input name="c" value="杭州市"/>
+		<input name="d" value="滨江区"/>
+		<div id="city_4">
+			<select class="prov" name="prov"></select> 
+			<select class="city" name="city" disabled="disabled"></select>
+			<select class="dist" name="dist" disabled="disabled"></select>
+		</div>
+		<pre>
+		<a href="javascript:;" id="h">获取值</a>
+		<a href="javascript:;" id="huan">赋值</a>
+			$("#初始化").citySelect({nodata:"none",required:false});
+			$("#初始化赋值").citySelect({prov:"浙江省", city:"杭州市", dist:"上城区"}); 
+		</pre>
+		<div id="content"></div>
+	</div>
+	
+<script type="text/javascript" src="../jquery.min-2.1.3.js"></script>
+<script type="text/javascript" src="jquery.cityselect.js"></script>
+<script type="text/javascript">
+$(function(){
+	//demo03
+	$("#city_3").citySelect({
+		nodata:"none",
+		required:false,
+		prov:"", city:"", dist:""
+	});
+	
+	//demo04
+	$("#city_4").citySelect({nodata:"none",
+		prov:"台湾省", city:"", dist:""
+	}); 
+	
+	
+	$("#h").click(function(){
+		$("#content").html($("[name='prov']").val()+","+$("[name='city']").val()+","+$("[name='dist']").val())
+	});
+	
+	$("#huan").click(function(){
+		$("#city_4").citySelect({
+			nodata:"none",
+			prov:$("[name='p']").val(), city:$("[name='c']").val(), dist:$("[name='d']").val()
+		}); 
+	});
+});
+</script>
+</body>
+</html>

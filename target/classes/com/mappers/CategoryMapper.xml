@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.CategoryDao">
+	<select id="queryNumberByMap" parameterType="Map" resultType="Long">
+	select count(*) from category 
+	<where>
+		<if test="cdelflag != null">and cdelflag=#{cdelflag}</if>
+	</where>
+	</select>
+	<select id="queryRowsByMap" parameterType="Map" resultType="Category">
+	select * from category 
+	<where>
+		<if test="cdelflag != null">and cdelflag=#{cdelflag}</if>
+	</where>
+	order by ctime desc
+	<if test="start != null and limit != null"> limit #{start},#{limit}</if>
+	</select>
+	<select id="getByMap" parameterType="Map" resultType="Category"></select>
+	<select id="findById" parameterType="Long" resultType="Category">
+	select * from category where cid=#{cid}
+	</select>
+	<select id="findByMap" parameterType="Map" resultType="Category"></select>
+	<insert id="save" parameterType="Category">
+	insert into category
+	(cname,ctime,caddname)
+	values
+	(#{cname},#{ctime},#{caddname})
+	</insert>
+	<update id="del" parameterType="Map">
+	update category set cdelflag=1 where cid in
+		<foreach collection="ids" open="(" close=")" separator=","
+			item="id">#{id}</foreach>
+	</update>
+	<update id="update" parameterType="Category">
+	update category
+	<set>
+		<if test="cname != null"> cname=#{cname},</if>
+		<if test="ctime != null"> ctime=#{ctime},</if>
+		<if test="caddname != null"> caddname=#{caddname},</if>
+	</set>
+	where cid=#{cid}
+	</update>
+	
+</mapper>

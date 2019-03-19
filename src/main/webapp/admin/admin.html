@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title> 搜索表单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../static/assets3/css/bs3/dpl-min.css" rel="stylesheet" type="text/css" />
+<link href="../static/assets3/css/bs3/bui-min.css" rel="stylesheet" type="text/css" />
+<!-- <link href="../static/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+<link href="../static/assets/css/bui-min.css" rel="stylesheet" type="text/css" /> -->
+<link href="../static/assets/css/page-min.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+[v-cloak] {
+    display: none;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+  <div class="row">
+      <form id="searchForm" class="form-horizontal span24">
+        <div class="row">
+          <div class="control-group span8">
+            <label class="control-label">用户名</label>
+            <div class="controls">
+              <input type="text" class="control-text" name="key" placeholder="用户名">
+              <input type="text" name="aaa" style="display: none;">
+            </div>
+          </div>
+          <div class="span3 offset">
+            <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="search-grid-container">
+      <div id="grid"></div>
+    </div>
+
+  </div>
+  
+  <div id="content" class="hide">
+     <form id="J_Form" class="form-horizontal" action="" method="post">
+     <div id="ct" >
+       <input type="hidden" name="aid">
+       <div class="row">
+         <div class="control-group span8">
+           <label class="control-label"><s>*</s>管理员</label>
+           <div class="controls">
+             <input name="aname" type="text" data-rules="{required:true}" class="input-normal control-text">
+           </div>
+         </div>
+       </div>
+       <div class="row">
+         <div class="control-group span8">
+           <label class="control-label"><s>*</s>密码</label>
+           <div class="controls">
+             <input name="apassword" type="password" data-rules="{required:true}" class="input-normal control-text">
+           </div>
+         </div>
+       </div>
+       </div>
+     </form>
+   </div>
+  <script type="text/javascript" src="../static/common/jquery.min-2.1.3.js"></script>
+  <script type="text/javascript" src="../static/assets/js/bui.js"></script>
+  <script type="text/javascript" src="../static/assets/js/config.js"></script>
+<script type="text/javascript" src="../static/vue/vue.js"></script>
+<script type="text/javascript">
+var vm =null;
+BUI.use(['common/search','bui/overlay'],function(Search,Grid,Data,overlay){
+    var Grid = BUI.Grid,
+      columns = [
+          {title:'管理员',dataIndex:'aname',elCls : 'center'},
+          {title:'操作',dataIndex:'',elCls : 'center',renderer : function(value,obj){
+              var delStr = '<span class="grid-command btn-del" title="删除">删除</span>';
+            return delStr;
+          }}
+        ],
+   		editing = new Grid.Plugins.DialogEditing({
+          contentId : 'content',
+          autoSave : true,
+          triggerCls : 'btn-edit', 
+          editor : {
+        	  width : 400,
+              title: '编辑',
+              success : function(){
+                var edtor = this,
+                form = edtor.get('form'),
+                editType = editing.get('editType'),//add 或者 edit
+                url = ""; 
+                if(editType == 'add'){ //可以根据编辑类型决定url
+                  url = '../admin/addAdm.shtml';
+                }else if(editType == 'edit'){
+                  url = '../admin/updAdm.shtml';
+                }
+                //检验
+                form.valid();
+                if(form.isValid()){
+                  form.ajaxSubmit({ //表单异步提交
+                    url : url,
+                    success : function(data){
+                      //将a 改成 1 测试一下显示错误
+                      if(data.hasError){ //返回的数据是 {hasError : fasle,error : 'xxxx',field : 'xxx'},也可以是任意格式的数据如 ： {success : false,'error' : 'xxxxx'}
+                   	  	if (data.errType=="auth") {
+                             edtor.close();
+            			}  
+                       	BUI.Message.Alert(data.error,'warning');
+                      }else{
+                        store.load();
+                        edtor.close();
+                        BUI.Message.Alert(data.error,function(){
+                        },'info');
+                      }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+    					BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,'warning');
+                    }
+                  });
+                }
+              }
+            }
+        }),
+	store = Search.createStore('../admin/loadAdmin.shtml',{
+        proxy : {
+          save : { //也可以是一个字符串，那么增删改，都会往那么路径提交数据，同时附加参数saveType
+			/* addUrl : '${pageContext.request.contextPath}/admin/addAdm.shtml',
+			updateUrl : '${pageContext.request.contextPath}/admin/updAdm.shtml',
+			removeUrl : '${pageContext.request.contextPath}/admin/delAdm.shtml' */
+          },
+          method : 'POST'
+        },
+        pageIndex :0,
+        pageSize:10,
+        autoSync : true //保存数据后，自动更新
+      });
+    
+      var gridCfg = Search.createGridCfg(columns,{
+         forceFit:true,
+        tbar : {
+          items : [
+            {text : '<i class="icon-plus"></i>新建',btnCls : 'button button-small',handler:addFunction},
+            {text : '<i class="icon-edit"></i>编辑',btnCls : 'button button-small',handler:updFunction},
+            {text : '<i class="icon-remove"></i>删除',btnCls : 'button button-small',handler : delFunction}
+          ]
+        },
+        loadMask: true, //加载数据时显示屏蔽层
+        plugins : [editing,BUI.Grid.Plugins.CheckSelection] // 插件形式引入多选表格
+      });
+
+    var  search = new Search({
+        store : store,
+        gridCfg : gridCfg
+      }),
+      grid = search.get('grid');
+    
+    editing.on('editorshow',function(ev){
+        var type = ev.editType; //add ,edit
+          //record = editing.get('record'); 
+        if( type == 'add'){  //如果马上保存，通过 ev.editType == 'add' 来判断
+    		$("[name='aname']").removeAttr("readonly");
+        }else{
+    		$("[name='aname']").attr("readonly","readonly");
+        }
+    });
+    
+	function addFunction(){
+		var newData = {isNew : false}; //标志是新增加的记录
+		editing.add(newData,'name'); //添加记录后，直接编辑
+	}
+
+    function updFunction(){
+        var selections = grid.getSelection();
+        var ids = [];
+        BUI.each(selections,function(selections){
+          ids.push(selections.aid);
+        });
+
+        if(ids.length>1){
+          BUI.Message.Alert('只能选择一条记录','warning');
+        }else if(ids.length<=0){
+            BUI.Message.Alert('请选择要编辑的记录','warning');
+        }else {
+	        //alert(JSON.stringify(selections));
+	        editing.edit(selections[0]);
+		}
+    }
+    
+    //删除操作
+    function delFunction(){
+      var selections = grid.getSelection();
+      //alert(JSON.stringify(selections));
+      delItems(selections);
+    }
+
+    function delItems(items){
+      var ids = [];
+      BUI.each(items,function(item){
+        ids.push(item.aid);
+      });
+      if(ids.length){
+        BUI.Message.Confirm('确认要删除选中的记录么？',function(){
+        	$.ajax({
+    			url : "../admin/delAdm.shtml",
+    			data : {"ids":ids.toString()},
+    			dataType : "json",
+    			type : "post",
+    			async: true,
+    			success : function(data) {
+    				if (data.hasError == false) {
+    					store.load();
+    				}else {
+						BUI.Message.Alert(data.error,'warning');
+    				}
+    			},
+    			error : function(XMLHttpRequest, textStatus, errorThrown) {
+    				BUI.Message.Alert("系统繁忙，请稍后"+XMLHttpRequest.status+","+XMLHttpRequest.readyState+","+textStatus,'warning');
+    			}
+    		}); 
+        },'question');
+      }else{
+		BUI.Message.Alert("请选择记录",function(){},'warning');
+      }
+    }
+
+    //监听事件，删除一条记录
+    grid.on('cellclick',function(ev){
+      var sender = $(ev.domTarget); //点击的Dom
+      if(sender.hasClass('btn-del')){
+        var record = ev.record;
+        delItems([record]);
+      }
+    });
+  });
+</script>
+
+
+
+<body>
+</html>  

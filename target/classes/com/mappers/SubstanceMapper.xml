@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.SubstanceDao">
+	<select id="queryNumberByMap" parameterType="Map" resultType="Long">
+	select count(*) from substance 
+	<where>
+		<if test="sname != null ">and sname like concat("%",concat(#{sname},"%"))</if>
+		<if test="tid != null">and tid=#{tid}</if>
+		<if test="sdelflag != null">and sdelflag=#{sdelflag}</if>
+		<if test="cid != null">and cids like concat(#{cid},",%") or cids like concat("%,",concat(#{cid},",%"))</if>
+	</where>
+	</select>
+	<select id="queryRowsByMap" parameterType="Map" resultType="Substance">
+	select * from substance 
+	<where>
+		<if test="sname != null ">and sname like concat("%",concat(#{sname},"%"))</if>
+		<if test="tid != null">and tid=#{tid}</if>
+		<if test="sdelflag != null">and sdelflag=#{sdelflag}</if>
+		<if test="cid != null">and cids like concat(#{cid},",%") or cids like concat("%,",concat(#{cid},",%"))</if>
+	</where>
+	order by stime desc
+	<if test="start != null and limit != null"> limit #{start},#{limit}</if>
+	</select>
+	<select id="getByMap" parameterType="Map" resultType="Substance"></select>
+	<select id="findById" parameterType="Long" resultType="Substance">
+	select * from substance where sid=#{sid}
+	</select>
+	<select id="findByMap" parameterType="Map" resultType="Substance"></select>
+	<insert id="save" parameterType="Substance">
+	insert into substance
+	(sname,spath,scontent,stime,aid,cids,tid,saddname)
+	values
+	(#{sname},#{spath},#{scontent},#{stime},#{aid},#{cids},#{tid},#{saddname})
+	</insert>
+	<update id="del" parameterType="Map">
+	update substance set sdelflag=1 where sid in
+		<foreach collection="ids" open="(" close=")" separator=","
+			item="id">#{id}</foreach>
+	</update>
+	<update id="update" parameterType="Substance">
+	update substance
+	<set>
+		<if test="sname != null">sname=#{sname},</if>
+		<if test="spath != null">spath=#{spath},</if>
+		<if test="scontent != null">scontent=#{scontent},</if>
+		<if test="stime != null">stime=#{stime},</if>
+		<if test="aid != null">aid=#{aid},</if>
+		<if test="cids != null">cids=#{cids},</if>
+		<if test="tid != null">tid=#{tid},</if>
+		<if test="saddname != null">saddname=#{saddname},</if>
+	</set>
+	where sid=#{sid}
+	</update>
+	
+</mapper>
