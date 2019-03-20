@@ -1,4 +1,4 @@
-.login_all{ width:100%; height:100%; position:fixed; left:0; top:0; background:url(../images/admin_bj.jpg) no-repeat; background-size:100% 100%; overflow:hidden;}
+.login_all{ width:100%; height:100%; position:fixed; left:0; top:0; background:url(../images/666.jpg) no-repeat; background-size:100% 100%; overflow:hidden;}
 #login_wrap {
 	width:400px;
 	margin:0 auto;
@@ -18,26 +18,27 @@
 
 #login_r {
       width: 400px;
-    height: 340px;
-    filter: Alpha(Opacity=75);
-    background: url(../images/666.gif) no-repeat;
-    background-position: center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    /* background-color: rgba(255, 255, 255, 0.75); */
-    margin-top: 30px;
-    border: 1px solid #dfccbc;
-    border-radius: 5px;}
+      height: 340px;
+      filter: Alpha(Opacity=75);
+      /*  background: url(../images/666.jpg) no-repeat; */
+      background-position: center;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      /* background-color: rgba(255, 255, 255, 0.75); */
+      margin-top: 30px;
+      /* border: 1px solid #dfccbc; */
+      border-radius: 5px;
+      }
 #login_r .bt{ text-align:center; font-size:18px; display:block; line-height:30px; margin-top:36px;font-family:"Microsoft YaHei"}
 #login_r input[type='text'],#login_r input[type='password']{ width:326px; height:38px; border:1px solid #b2bfc7; background:#fff; border-radius:3px; display:block; margin:0 auto; margin-top:10px;font-family:"Microsoft YaHei";}
 #login_r input[type='text']{ margin-top:30px;}
-#login_r input[type='submit']{ margin:20px auto 0 auto; font-size:14px;font-family:"Microsoft YaHei"}
+#login_r input[type='submit']{margin:20px auto 0 auto;font-size:14px;font-family:"Microsoft YaHei";}
 
 .pass_fg{ width:328px; margin:18px auto 0 auto; overflow:hidden; font-size:12px; line-height:20px;}
 .pass_fg span{ float:left; display:block; overflow:hidden;}
 .pass_fg a{ float:right; text-decoration:underline; margin-right:12px;}
 .pass_fg input[type='checkbox']{ margin:4px 8px 0 0; float:left;}
-#login_r input[type='submit']{ width:100px;}
+#login_r input[type='submit']{width:100px;BACKGROUND-COLOR: transparent;}
 
 .weizc{ width:100%; text-align:center; font-size:14px; line-height:30px; color:#fff; margin-top:20px;}
 .weizc a{ color:#fff; text-decoration:underline;}
